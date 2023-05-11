@@ -1,6 +1,7 @@
 package com.spring.jwt.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -27,20 +29,27 @@ public class User implements UserDetails {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-//    @Email
+
     @Column(unique = true)
     private String email;
     private String password;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Rating> ratings;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Restaurant> restaurant;
+
 
     @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "roleId"))
-    private List<Role> roleList;
-
+    private List<Role> roleList = new ArrayList<>();
 
 
     @Override

@@ -1,6 +1,8 @@
 package com.spring.jwt.demo.jwt;
 
 
+import com.spring.jwt.demo.dto.RefreshTokenRequestDto;
+import com.spring.jwt.demo.entity.RefreshToken;
 import com.spring.jwt.demo.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -27,8 +28,11 @@ public class JwtService {
     @Value("${security.jwt.accessToken.expiration}")
     private Long ACCESS_TOKEN_EXPIRATION;
 
-    @Value("${security.jwt.refreshToken.expiration}")
-    private Long REFRESH_TOKEN_EXPIRATION;
+    private final RefreshTokenService refreshTokenService;
+
+    public JwtService(RefreshTokenService refreshTokenService) {
+        this.refreshTokenService = refreshTokenService;
+    }
 
     public String getEmail(String token) {
         return ExportToken(token, Claims::getSubject);
@@ -61,8 +65,8 @@ public class JwtService {
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public boolean isTokenExpired(String token) {
-        return ExportToken(token, Claims::getExpiration).before(new Date());
+    public boolean isTokenExpired(String token) { //TO DO: change dateTime to -> zonedDateTime
+        return ExportToken(token, Claims::getExpiration).before(Date.from(java.time.ZonedDateTime.now().toInstant()));
     }
 
     //    public boolean validateJwtToken(String authToken) {
@@ -84,23 +88,32 @@ public class JwtService {
     //        return false;
     //    }
 
+
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION)) //15 minute
+
+
     public String generateToken(User user) {
         return Jwts.builder()
                 .setClaims(new HashMap<>())
                 .setSubject(user.getEmail())
                 .setAudience("orion")
                 .setIssuer("orion.com")
-                .claim("test","test")
-                .claim("test2","test2")
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION)) //15 minute
-                .signWith(getKey(), SignatureAlgorithm.HS512)
+                .claim("test", "test")
+                .claim("test2", "test2")
+                .setIssuedAt(Date.from(java.time.ZonedDateTime.now().toInstant()))
+                .setExpiration(Date.from(java.time.ZonedDateTime.now().plusMinutes(ACCESS_TOKEN_EXPIRATION).toInstant()))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
 
-
-        return UUID.randomUUID().toString();
+    public RefreshToken generateRefreshToken(User user) {
+        return refreshTokenService.generateRefreshToken(user);
     }
+
+    public RefreshToken refreshTokenLogin(RefreshTokenRequestDto refreshTokenRequestDto) {
+        return refreshTokenService.refreshTokenLogin(refreshTokenRequestDto);
+    }
+
 }

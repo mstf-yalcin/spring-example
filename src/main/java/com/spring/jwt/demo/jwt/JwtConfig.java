@@ -1,6 +1,7 @@
 package com.spring.jwt.demo.jwt;
 
 
+import com.spring.jwt.demo.exception.UnAuthorizedException;
 import com.spring.jwt.demo.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class JwtConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UnAuthorizedException("User not found"));
     }
 
     @Bean

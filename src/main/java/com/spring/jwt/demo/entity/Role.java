@@ -8,6 +8,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 @Data
@@ -27,7 +32,6 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return role.name();
     }
-
 
 }
 

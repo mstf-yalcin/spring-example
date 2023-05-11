@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,7 +26,6 @@ import java.io.IOException;
 
 public class SecurityConfig {
 
-
     private final AuthenticationProvider authenticationProvider;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -39,17 +39,34 @@ public class SecurityConfig {
             // -- swagger ui
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/auth/**", "/role/**",
+            "/api/v1/category/**",
+            "/api/v1/food/**",
+            "/api/v1/restaurant/**",
+            "/api/v1/rating/**"
     };
 
+    private static final String[] AUTH = {
+            "/api/v1/category/**",
+            "/api/v1/food/**",
+            "/api/v1/restaurant/**",
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(AUTH_WHITELIST).permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/test").hasRole("ADMIN")
+                .authorizeHttpRequests().requestMatchers(" /role/**").hasRole("ADMIN")
+                .and()
+                .authorizeHttpRequests().requestMatchers("/test").hasRole("USER")
+                .and()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, AUTH).hasAnyRole("MANAGER", "ADMIN")
+                .and()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.PUT, AUTH).hasAnyRole("MANAGER", "ADMIN")
+                .and()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, AUTH).hasAnyRole("MANAGER", "ADMIN")
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated()
                 .and()

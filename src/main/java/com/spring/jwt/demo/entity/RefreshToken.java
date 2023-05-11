@@ -14,9 +14,8 @@ import java.time.ZonedDateTime;
 @Setter
 @EqualsAndHashCode(of = "token")
 public class RefreshToken {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String token;
@@ -24,7 +23,6 @@ public class RefreshToken {
     private ZonedDateTime expiration;
 
     @OneToOne
-    @JoinColumn(nullable = false,name = "userId")
     private User user;
 
 }
