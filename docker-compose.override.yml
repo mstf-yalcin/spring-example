@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  spring-jwt-example:
+    ports:
+      - 80:9000
+    environment:
+      - SPRING_PROFILES_ACTIVE=compose
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test12*
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=springjwt
+    depends_on:
+      - postgresql
+  postgresql:
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test12*
+      - POSTGRES_DB=springjwt
+    ports:
+        - 5432:5432
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+
+

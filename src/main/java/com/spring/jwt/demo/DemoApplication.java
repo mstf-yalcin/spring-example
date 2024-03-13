@@ -10,8 +10,10 @@ import com.spring.jwt.demo.service.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching
 public class DemoApplication implements CommandLineRunner {
 
     private final RoleRepository roleRepository;

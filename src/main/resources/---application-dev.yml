@@ -1,0 +1,49 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/springJwt
+#    username: postgres
+#    password: 123456
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
+#  doc:
+#    api-docs:
+#      enabled: true
+#    main:
+#      web-application-type: reactive
+#
+#server:
+#  port: 9000
+#
+#  redis:
+#    host: localhost
+#    port: 6379
+#  application:
+#    name: ratelimiter-example
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: route1
+#          uri: http://localhost:8080/hello
+#          predicates:
+#            - Path=/hello
+#          filters:
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 20
+#                redis-rate-limiter.burstCapacity: 40
+#                redis-rate-limiter.requestedTokens: 1
+#
+#
+#hibernate:
+#  show_sql: true
+#  format_sql: true
+#
+#security:
+#  jwt:
+#    secretKey: QVNkYXNkQXlsaW5BU2Rhc2RzZW5pYUFzYXNkc2V2aW1mYXN5b3J1bWRhc2RhZA===
+#    accessToken:
+#      expiration: 15
+#    refreshToken:
+#      expiration: 60

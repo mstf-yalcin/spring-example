@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  postgresql:
+    image: postgres
+  spring-jwt-example:
+    container_name: spring-jwt-example
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+volumes:
+  postgres-volume:

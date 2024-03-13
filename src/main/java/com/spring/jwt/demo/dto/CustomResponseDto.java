@@ -3,6 +3,7 @@ package com.spring.jwt.demo.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CustomResponseDto<T>(T data,
                                    int statusCode,
-                                   List<String> errors) {
+                                   List<String> errors) implements Serializable {
     public static <T> CustomResponseDto<T> Success(int statusCode, T data) {
         CustomResponseDto<T> responseDto = new CustomResponseDto<T>(data,statusCode,null);
         return responseDto;

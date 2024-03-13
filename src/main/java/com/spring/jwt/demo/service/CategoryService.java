@@ -10,6 +10,8 @@ import com.spring.jwt.demo.entity.Category;
 import com.spring.jwt.demo.exception.NotFoundException;
 import com.spring.jwt.demo.jwt.JwtService;
 import com.spring.jwt.demo.repository.CategoryRepository;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class CategoryService {
     }
 
 
+
+
     public CustomResponseDto<CategoryResponseDto> createCategory(CreateCategoryRequestDto createCategoryRequestDto) {
 
         Category category = categoryRepository.save(Category.builder()
@@ -41,6 +45,7 @@ public class CategoryService {
 
 
     public CustomResponseDto<List<CategoryResponseDto>> getAllCategory() {
+        waitSomeTime();
         List<Category> category = categoryRepository.findAll();
         return CustomResponseDto.Success(200, categoryDtoConverter.convertToCategoryDto(category));
     }
@@ -74,6 +79,16 @@ public class CategoryService {
 
     public boolean existsByName(String name) {
         return categoryRepository.existsByName(name);
+    }
+
+    private void waitSomeTime() {
+        System.out.println("Long Wait Begin");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Long Wait End");
     }
 
 }

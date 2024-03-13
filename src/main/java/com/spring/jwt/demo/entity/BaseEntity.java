@@ -22,15 +22,11 @@ public class  BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @CreatedDate
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-//    @Temporal(value = TemporalType.TIMESTAMP)
     private ZonedDateTime createdAt;
 
-//    @LastModifiedDate
     @UpdateTimestamp
-//    @Temporal(value = TemporalType.TIMESTAMP)
     private ZonedDateTime updateAt;
 
     private Boolean isDeleted = false;
